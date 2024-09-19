@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { useQuery } from '@tanstack/vue-query'
-import { COLLECTION_DEALS, DB_ID } from '~/app.constants'
+import {useQuery} from '@tanstack/vue-query'
+import {COLLECTION_DEALS, DB_ID} from '~/app.constants'
 import dayjs from 'dayjs'
 
 useSeoMeta({
@@ -9,7 +9,7 @@ useSeoMeta({
 
 const ordersArray = ref({});
 
-const { data: orders, isLoading } = useQuery({
+const {data: orders, isLoading} = useQuery({
   queryKey: ['orders'],
   queryFn: () => DB.listDocuments(DB_ID, COLLECTION_DEALS),
   select: (data) => {
@@ -42,7 +42,7 @@ const { data: orders, isLoading } = useQuery({
       >
         <template #expand="{ row }">
           <div>
-<!--            <pre>{{ ordersArray.find(item => item.name === row.назва) }}</pre>-->
+            <!--            <pre>{{ ordersArray.find(item => item.name === row.назва) }}</pre>-->
             <pre>Опис:</pre>
             <pre class="mb-4">{{ ordersArray.find(item => item.name === row.name).description }}</pre>
 
@@ -51,6 +51,6 @@ const { data: orders, isLoading } = useQuery({
           </div>
         </template>
       </UTable>
+    </div>
   </div>
-</div>
 </template>

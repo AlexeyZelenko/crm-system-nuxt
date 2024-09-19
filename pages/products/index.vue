@@ -4,7 +4,6 @@ import {COLLECTION_PRODUCTS, DB_ID} from '~/app.constants'
 import type {IProduct} from '~/types/products.types'
 import dayjs from 'dayjs'
 import Swal from "sweetalert2";
-import {useKanbanQuery} from "~/components/kanban/useKanbanQuery";
 
 useSeoMeta({
   title: 'Products | INFINITY',
@@ -30,7 +29,7 @@ const { data: products, isLoading, refetch } = useQuery({
   }
 })
 
-const { mutate, isPending } = useMutation({
+const { mutate } = useMutation({
   mutationKey: ['delete a product'],
   mutationFn: (productId: string) => DB.deleteDocument(DB_ID, COLLECTION_PRODUCTS, productId),
   onSuccess: () => {

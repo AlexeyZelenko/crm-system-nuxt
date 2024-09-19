@@ -6,7 +6,7 @@ import {useForm} from "vee-validate";
 import * as yup from "yup";
 import {v4 as uuid} from "uuid";
 import Swal from "sweetalert2";
-import { format } from 'date-fns'
+import {format} from 'date-fns'
 
 useSeoMeta({
   title: 'Create product | INFINITY',
@@ -15,9 +15,10 @@ useSeoMeta({
 const route = useRoute()
 
 interface IProductsFormState
-    extends Pick<IProduct, 'name' | 'description' | 'client' | 'deadline' | 'status' | 'lead'> {}
+    extends Pick<IProduct, 'name' | 'description' | 'client' | 'deadline' | 'status' | 'lead'> {
+}
 
-const { setFieldValue, handleSubmit, defineField, handleReset, errors, values } = useForm<IProductsFormState>({
+const {handleSubmit, defineField, handleReset, errors} = useForm<IProductsFormState>({
   validationSchema: yup.object({
     name: yup
         .string()
@@ -52,7 +53,7 @@ const [description, descriptionAttrs] = defineField('description')
 const [client, clientAttrs] = defineField('client')
 const [status, statusAttrs] = defineField('status')
 const [lead, leadAttrs] = defineField('lead')
-const [deadline, deadlineAttrs] = defineField('deadline', new Date());
+const [deadline, deadlineAttrs] = defineField('deadline', new Date() as any)
 
 
 const formattedDeadline = computed(() => {
@@ -62,16 +63,16 @@ const formattedDeadline = computed(() => {
   return 'Select a date';
 });
 
-const { mutate, isPending, error } = useMutation({
+const {mutate, isPending, error} = useMutation({
   mutationKey: ['create a new product'],
   mutationFn: (data: IProductsFormState) => DB.createDocument(DB_ID, COLLECTION_PRODUCTS, uuid(), data),
   onSuccess() {
-    handleReset(),
-        Swal.fire({
-          icon: 'success',
-          title: 'Успіх!',
-          text: 'Продукт успішно створений',
-        })
+    handleReset()
+    Swal.fire({
+      icon: 'success',
+      title: 'Успіх!',
+      text: 'Продукт успішно створений',
+    })
   },
   onError(error) {
     Swal.fire({

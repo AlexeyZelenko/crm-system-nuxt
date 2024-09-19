@@ -129,11 +129,11 @@ const onSubmit = handleSubmit(values => {
           class="rounded-full my-4"
       />
       <div class="grid w-full max-w-sm items-center gap-1.5 input">
+        <div class="text-sm mb-2">Logo</div>
         <label>
-          <div class="text-sm mb-2">Logo</div>
           <UiInput
               type="file"
-              :onchange="(e:InputFileEvent) => e?.target?.files?.length && uploadImage(e.target.files[0])"
+              :onchange="(e:InputFileEvent) => e?.target?.files?.length && uploadImage(e.target?.files[0])"
               :disabled="isUploadImagePending"
           />
         </label>

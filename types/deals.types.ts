@@ -10,16 +10,6 @@ export interface ICustomer extends IBaseField {
 	from_source?: string
 }
 
-export interface IMember extends IBaseField {
-	name: string
-	role: string
-	position: string
-	email: string
-	avatar_url: string
-	from_source?: string
-	id: string
-}
-
 export interface IComment extends IBaseField {
 	text: string
 }
@@ -33,13 +23,23 @@ export enum EnumStatus {
 }
 
 export interface IDeal extends IBaseField {
-	comments: IComment[]
-	customer: ICustomer
+	comments?: IComment[]
+	customer?: ICustomer
 	name: string
 	description: string
 	priority: string
 	executants: any[]
 	owner: string
 	status: EnumStatus
+}
+
+export interface IMember extends IBaseField {
+	name: string
+	email: string
+	avatar_url: string,
+	position: string,
+	role: string,
+	from_source?: string
+	id?: string
 }
 

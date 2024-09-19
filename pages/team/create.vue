@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {useMutation} from '@tanstack/vue-query'
 import {COLLECTION_TEAM, DB_ID, STORAGE_ID} from '~/app.constants'
-import type {EnumStatus, ICustomer, IDeal} from "~/types/deals.types";
+import type {ICustomer} from "~/types/teams.types";
 import {useForm} from "vee-validate";
 import * as yup from "yup";
 import {v4 as uuid} from "uuid";
@@ -14,9 +14,10 @@ useSeoMeta({
 const route = useRoute()
 
 interface ICustomerFormState
-    extends Pick<ICustomer, 'avatar_url' | 'email' | 'name' | 'position' | 'role' > {}
+    extends Pick<ICustomer, 'avatar_url' | 'email' | 'name' | 'position' | 'role'> {
+}
 
-const { setFieldValue, handleSubmit, defineField, handleReset, errors, values } = useForm<ICustomerFormState>({
+const {setFieldValue, handleSubmit, defineField, handleReset, errors, values} = useForm<ICustomerFormState>({
   validationSchema: yup.object({
     name: yup
         .string()
@@ -36,16 +37,20 @@ const { setFieldValue, handleSubmit, defineField, handleReset, errors, values } 
   }),
 })
 
+interface InputFileEvent extends Event {
+  target: HTMLInputElement
+}
+
 const [name, nameAttrs] = defineField('name')
 const [email, emailAttrs] = defineField('email')
 const [position, positionAttrs] = defineField('position')
 const [role, roleAttrs] = defineField('role')
 
-const { mutate, isPending } = useMutation({
+const {mutate, isPending} = useMutation({
   mutationKey: ['create a new deal'],
   mutationFn: (data: ICustomerFormState) => DB.createDocument(DB_ID, COLLECTION_TEAM, uuid(), data),
   onSuccess() {
-    handleReset(),
+    handleReset()
     Swal.fire({
       icon: 'success',
       title: 'Успіх!',
@@ -54,7 +59,7 @@ const { mutate, isPending } = useMutation({
   },
 })
 
-const { mutate: uploadImage, isPending: isUploadImagePending } = useMutation({
+const {mutate: uploadImage, isPending: isUploadImagePending, data} = useMutation({
   mutationKey: ['upload image'],
   mutationFn: (file: File) => storage.createFile(STORAGE_ID, uuid(), file),
   onSuccess(data) {
@@ -72,7 +77,7 @@ const onSubmit = handleSubmit(values => {
 <template>
   <div class="p-10">
     <h1 class="font-bold text-2xl mb-10">
-      Create staff member  {{ (data as unknown as ICustomerFormState)?.name }}
+      Create staff member {{ (data as unknown as ICustomerFormState)?.name }}
     </h1>
 
     <form @submit="onSubmit" class="form">
@@ -123,11 +128,11 @@ const onSubmit = handleSubmit(values => {
           class="rounded-full my-4"
       />
       <div class="grid w-full max-w-sm items-center gap-1.5 input">
+        <div class="text-sm mb-2">Логотип</div>
         <label>
-          <div class="text-sm mb-2">Логотип</div>
           <UiInput
               type="file"
-              :onchange="(e:InputFileEvent) => e?.target?.files?.length && uploadImage(e.target.files[0])"
+              :onchange="(e:InputFileEvent) => e?.target?.files?.length && uploadImage(e.target?.files[0])"
               :disabled="isUploadImagePending"
           />
         </label>

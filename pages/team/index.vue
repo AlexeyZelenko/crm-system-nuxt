@@ -1,20 +1,20 @@
 <script lang="ts" setup>
 import {useMutation, useQuery} from '@tanstack/vue-query'
 import {COLLECTION_PRODUCTS, COLLECTION_TEAM, DB_ID} from '~/app.constants'
-import type {ICustomer, IMember} from '~/types/deals.types'
 import Swal from "sweetalert2";
+import type {ICustomer} from "~/types/teams.types";
 
 useSeoMeta({
   title: 'Team | INFINITY',
 })
 
-const { data: customers, isLoading, refetch } = useQuery({
+const {data: customers, isLoading, refetch} = useQuery({
   queryKey: ['team'],
   queryFn: () => DB.listDocuments(DB_ID, COLLECTION_TEAM),
 })
 
 
-const { mutate, isPending } = useMutation({
+const {mutate} = useMutation({
   mutationKey: ['delete a customer of team'],
   mutationFn: (customerId: string) => DB.deleteDocument(DB_ID, COLLECTION_PRODUCTS, customerId),
   onSuccess: () => {
@@ -60,7 +60,7 @@ onMounted(() => {
     <header class="flex mb-10">
       <h1 class="font-bold text-2xl mr-4">Виконавці</h1>
       <NuxtLink :href="`/team/create`">
-          <UButton color="white" variant="solid">Додати</UButton>
+        <UButton color="white" variant="solid">Додати</UButton>
       </NuxtLink>
     </header>
 
@@ -79,7 +79,7 @@ onMounted(() => {
       </UiTableHeader>
       <UiTableBody>
         <UiTableRow
-            v-for="customer in (customers?.documents as unknown as IMember[])"
+            v-for="customer in (customers?.documents as unknown as ICustomer[])"
             :key="customer.$id"
         >
           <UiTableCell>

@@ -1,19 +1,11 @@
 <script setup lang="ts">
-import { useMutation, useQuery } from '@tanstack/vue-query'
-import { v4 as uuid } from 'uuid'
-import { COLLECTION_PRODUCTS, DB_ID } from '~/app.constants'
-import type { ICustomer } from '~/types/deals.types'
+import {useMutation, useQuery} from '@tanstack/vue-query'
+import {COLLECTION_PRODUCTS, DB_ID} from '~/app.constants'
 import Swal from 'sweetalert2'
-import { useForm } from 'vee-validate';
+import {useForm} from 'vee-validate';
 import * as yup from 'yup';
 import type {IProduct} from "~/types/products.types";
 import {format} from "date-fns";
-
-interface InputFileEvent extends Event {
-  target: HTMLInputElement
-}
-interface IProductsFormState
-    extends Pick<IProduct, 'name' | 'description' | 'client' | 'deadline' | 'status' | 'lead'> {}
 
 useSeoMeta({
   title: `Edit member | INFINITY`,
@@ -22,7 +14,7 @@ useSeoMeta({
 const route = useRoute()
 const customerId = route.params.id as string
 
-const { handleSubmit, defineField, setFieldValue, setValues, values, errors } =
+const {handleSubmit, defineField, setValues, errors} =
     useForm<IProduct>({
       validationSchema: yup.object({
         name: yup
@@ -53,7 +45,7 @@ const { handleSubmit, defineField, setFieldValue, setValues, values, errors } =
       }),
     })
 
-const { data, isSuccess } = useQuery({
+const {data, isSuccess} = useQuery({
   queryKey: ['get employee', customerId],
   queryFn: () => DB.getDocument(DB_ID, COLLECTION_PRODUCTS, customerId),
 })
@@ -75,7 +67,7 @@ const [description, descriptionAttrs] = defineField('description')
 const [client, clientAttrs] = defineField('client')
 const [status, statusAttrs] = defineField('status')
 const [lead, leadAttrs] = defineField('lead')
-const [deadline, deadlineAttrs] = defineField('deadline', new Date());
+const [deadline, deadlineAttrs] = defineField('deadline', new Date() as any);
 
 const formattedDeadline = computed(() => {
   if (deadline.value && !isNaN(new Date(deadline.value).getTime())) {
@@ -84,7 +76,7 @@ const formattedDeadline = computed(() => {
   return 'Select a date';
 });
 
-const { mutate, isPending } = useMutation({
+const {mutate, isPending} = useMutation({
   mutationKey: ['update product', customerId],
   mutationFn: (data: IProduct) =>
       DB.updateDocument(DB_ID, COLLECTION_PRODUCTS, customerId, data),

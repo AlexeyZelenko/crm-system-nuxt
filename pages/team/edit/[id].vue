@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { useMutation, useQuery } from '@tanstack/vue-query'
-import { v4 as uuid } from 'uuid'
-import { COLLECTION_TEAM, DB_ID, STORAGE_ID } from '~/app.constants'
-import type { ICustomer } from '~/types/deals.types'
+import {useMutation, useQuery} from '@tanstack/vue-query'
+import {v4 as uuid} from 'uuid'
+import {COLLECTION_TEAM, DB_ID, STORAGE_ID} from '~/app.constants'
+import type {ICustomer} from "~/types/teams.types";
 import Swal from 'sweetalert2'
-import { useForm } from 'vee-validate';
+import {useForm} from 'vee-validate';
 import * as yup from 'yup';
 
 interface InputFileEvent extends Event {
@@ -12,7 +12,8 @@ interface InputFileEvent extends Event {
 }
 
 interface ICustomerFormState
-    extends Pick<ICustomer, 'avatar_url' | 'email' | 'name' | 'position' | 'role' > {}
+    extends Pick<ICustomer, 'avatar_url' | 'email' | 'name' | 'position' | 'role'> {
+}
 
 useSeoMeta({
   title: `Edit member | INFINITY`,
@@ -21,7 +22,7 @@ useSeoMeta({
 const route = useRoute()
 const customerId = route.params.id as string
 
-const { handleSubmit, defineField, setFieldValue, setValues, values, errors } =
+const {handleSubmit, defineField, setFieldValue, setValues, values, errors} =
     useForm<ICustomerFormState>({
       validationSchema: yup.object({
         name: yup
@@ -42,7 +43,7 @@ const { handleSubmit, defineField, setFieldValue, setValues, values, errors } =
       }),
     })
 
-const { data, isSuccess } = useQuery({
+const {data, isSuccess} = useQuery({
   queryKey: ['get employee', customerId],
   queryFn: () => DB.getDocument(DB_ID, COLLECTION_TEAM, customerId),
 })
@@ -63,7 +64,7 @@ const [email, emailAttrs] = defineField('email')
 const [role, roleAttrs] = defineField('role')
 const [position, positionAttrs] = defineField('position')
 
-const { mutate, isPending } = useMutation({
+const {mutate, isPending} = useMutation({
   mutationKey: ['update customer', customerId],
   mutationFn: (data: ICustomerFormState) =>
       DB.updateDocument(DB_ID, COLLECTION_TEAM, customerId, data),
@@ -78,7 +79,7 @@ const { mutate, isPending } = useMutation({
   }
 })
 
-const { mutate: uploadImage, isPending: isUploadImagePending } = useMutation({
+const {mutate: uploadImage, isPending: isUploadImagePending} = useMutation({
   mutationKey: ['upload image'],
   mutationFn: (file: File) => storage.createFile(STORAGE_ID, uuid(), file),
   onSuccess(data) {
@@ -148,11 +149,11 @@ const onSubmit = handleSubmit(values => {
           class="rounded-full my-4"
       />
       <div class="grid w-full max-w-sm items-center gap-1.5 input">
+        <div class="text-sm mb-2">Логотип</div>
         <label>
-          <div class="text-sm mb-2">Логотип</div>
           <UiInput
               type="file"
-              :onchange="(e:InputFileEvent) => e?.target?.files?.length && uploadImage(e.target.files[0])"
+              :onchange="(e:InputFileEvent) => e?.target?.files?.length && uploadImage(e.target?.files[0])"
               :disabled="isUploadImagePending"
           />
         </label>
